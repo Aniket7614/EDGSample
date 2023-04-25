@@ -7,15 +7,12 @@
 
 import Foundation
 
-
-
 class ProductViewModel: ObservableObject {
     
     var service = Service.shared
     @Published var products: ProductModel?
-    
-    
-    
+    @Published var selectedProducts: [Product] = []
+ 
     init() {
        fetchProducts()
     }

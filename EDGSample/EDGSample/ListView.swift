@@ -20,13 +20,18 @@ struct ListView: View {
                            Color.clear
                                .ignoresSafeArea()
                            List {
-                               ForEach (productViewModel.products?.products ?? [Product]()) { product in
-                                   ListItem(name: product.title ?? "",imageUrl: product.imageURL ?? "",price: "\(product.price?.first?.value ?? 0.0)" )
-                                       .listRowBackground(Color.blue)
-                                       .onTapGesture {
-                                           isShowingDetail = true
-                                           selectedProduct = product
-                                       }
+                               if #available(iOS 15.0, *) {
+                                   ForEach (productViewModel.products?.products ?? [Product]()) { product in
+                                       ListItem(name: product.title ?? "",imageUrl: product.imageURL ?? "",price: "\(product.price?.first?.value ?? 0.0)" )
+                                           .listRowBackground(Color.blue)
+                                           .onTapGesture {
+                                               isShowingDetail = true
+                                               selectedProduct = product
+                                           }}
+                                   .listRowSeparator(.hidden) // Hide the default separator
+                                   
+                               } else {
+                                   // Fallback on earlier versions
                                }
                            }
                            .padding()
@@ -38,8 +43,7 @@ struct ListView: View {
                            }
                            .hidden()
                            .navigationBarTitle("Product Details")
-                       }
-                   }
+                       }}
                    .tabItem {
                        Image(systemName: "list.bullet")
                        Text("Product List")
@@ -53,8 +57,7 @@ struct ListView: View {
                                .font(.largeTitle)
                                .fontWeight(.bold)
                                .foregroundColor(.white)
-                       }
-                   }
+                       }}
                    .tabItem {
                        Image(systemName: "heart.fill")
                        Text("Favourite Products")
@@ -120,6 +123,8 @@ struct ProductDetailView: View {
         var imageUrl:String
         var price:String
         @State var isFavourite: Bool = false
+        @ObservedObject var productViewModel = ProductViewModel()
+
         
         var body: some View {
             HStack {
@@ -132,19 +137,20 @@ struct ProductDetailView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                         }, placeholder: {
-                            Color.gray
+                            Color.clear
                         })
-                    .frame(width: 80, height: 60)
+                    .frame(width: 50, height: 50)
+                    .offset(x: -10)
                 } else {
                     // Fallback on earlier versions
                 }
                 VStack(alignment:.leading){
                     Text(name)
-                        .fontWeight(.medium)
-                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .font(.title3)
                     Text(price)
                         .fontWeight(.medium)
-                        .font(.title3)
+                        .font(.subheadline)
                     
                 }
                 Spacer()
