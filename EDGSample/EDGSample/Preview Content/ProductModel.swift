@@ -9,12 +9,13 @@ import Foundation
 
 // MARK: - ProductModel
 struct ProductModel: Codable {
-    let products: [Product]?
+    var products: [Product]?
 }
 
 // MARK: - Product
 struct Product: Codable,Identifiable {
-    let citrusID, title, id: String?
+    let id:String
+    let citrusID, title:String?
     let imageURL: String?
     let price: [Price]?
     let brand: String?
@@ -29,6 +30,7 @@ struct Product: Codable,Identifiable {
     let saleUnitPrice: Double?
     let totalReviewCount: Int?
     let isDeliveryOnly, isDirectFromSupplier: Bool?
+    var isFavorite:Bool = false
 
     enum CodingKeys: String, CodingKey {
         case citrusID = "citrusId"
